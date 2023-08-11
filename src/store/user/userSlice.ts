@@ -1,26 +1,20 @@
-import { ReducerPayload } from "@/redux/utils/type";
+import { ReducerPayload } from "@/store/utils/type";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import userInitialState from "./userInitialState";
 
-interface User {
-  username?: string;
-  email?: string;
-  image?: string;
+export interface UserStorePayload {
+  username: string;
+  email: string;
+  image: string;
 }
-
-interface userState {
-  currentUser?: User;
-}
-
-const userInitialState: userState = {
-  currentUser: undefined,
-};
 
 const userSlice = createSlice({
   name: "user",
   initialState: userInitialState,
   reducers: {
-    setUser(state, { payload }: ReducerPayload<User>) {
-      state.currentUser = { ...payload };
+    setUser(state, { payload }: ReducerPayload<UserStorePayload>) {
+      const lastSyncTime = Date.now().toFixed();
+      state.currentUser = { ...payload, lastSyncTime };
     },
     resetUser(state) {
       state.currentUser = undefined;

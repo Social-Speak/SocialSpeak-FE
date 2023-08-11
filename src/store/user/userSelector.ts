@@ -1,4 +1,4 @@
-import { RootState } from "@/redux/store/store";
+import { RootState } from "@/store/RootReducer";
 
 export const getCurrentUserData = ({user} : RootState) => {
     return user.currentUser
