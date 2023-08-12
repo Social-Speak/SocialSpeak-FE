@@ -7,6 +7,8 @@ import Google from '@/components/shared/icons/google'
 import { signIn, useSession } from 'next-auth/react'
 import useUserData from '@/lib/hooks/useUserData'
 import LoadingDots from '@/components/shared/icons/loading-dots'
+import { useDispatch } from 'react-redux'
+import { UserStorePayload, setUser } from '@/store/user/userSlice'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -16,16 +18,19 @@ export default function Home() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [buttonClicked, setButtonClicked] = useState(false)
+  const dispatch = useDispatch()
 
+  const { data: session } = useSession()
 
   const handleSignInGoogle = useCallback(async () => {
     setButtonClicked(true)
     await signIn("google")
-  }, [])
+    const sessionUser = await session?.user as UserStorePayload
+    dispatch(setUser(sessionUser))
+  }, [dispatch, session])
 
   const { currentUser } = useUserData()
 
-  const { data: session } = useSession()
 
   console.log(`currentUser`, currentUser)
   console.log(`currentUserData`, session)

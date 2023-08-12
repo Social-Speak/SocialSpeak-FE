@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import Modal from '@/components/shared/modal'
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import Image from 'next/image'
 import { Inter } from 'next/font/google'
 import router from 'next/router'
@@ -9,13 +9,36 @@ import Google from '@/components/shared/icons/google'
 import { signIn, useSession } from 'next-auth/react'
 import useUserData from '@/lib/hooks/useUserData'
 import LoadingDots from '@/components/shared/icons/loading-dots'
+import axios from 'axios'
 
 export default function index() {
     const [showModal, setShowModal] = useState(false)
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [username, setUsername] = useState('')
+
     const [buttonClicked, setButtonClicked] = useState(false)
+
+
+    const handleSignUp = useCallback(async () => {
+      const payload = {
+        email: email,
+        password: password,
+        username: username
+      }
+
+      try {
+        const res = await axios.post('https://social-speak.fly.dev/register', payload)  
+        console.log(res.data)
+        if(res.data){
+          console.log(res.data)
+          router.push('/')
+        }
+      } catch (error) {
+        // console.error(error.message)
+      }
+    },[email, username, password])
+
     return (
         <div className='flex flex-col w-full h-screen bg-gradient-to-br from-cyan-100 via-slate-50 to-teal-100'>
       <div className='absolute flex ml-4  h-fit items-center gap-1 z-20'>
@@ -29,7 +52,8 @@ export default function index() {
           <div className='flex flex-col w-full md:max-w-xl items-center min-h-[400px] h-fit py-10 rounded-t-[32px] bg-white border md:py-10 px-16 absolute bottom-0 md:relative  md:rounded-[32px] md:min-h-[400px] md:max-h-[700px] shadow-md gap-5'>
             <h2 className='text-xl md:text-2xl font-semibold mb-5'>Register your account</h2>
             
-            <div className="flex flex-col w-full gap-2 font-semibold text-lg ">
+          <form action="" onSubmit={handleSignUp} className='w-full flex flex-col gap-5'>
+          <div className="flex flex-col w-full  font-semibold text-lg ">
               <label htmlFor="">Email</label>
               <TextField
                 size='small'
@@ -39,7 +63,7 @@ export default function index() {
               />
 
             </div>
-            <div className="flex flex-col w-full gap-2 font-semibold text-lg ">
+            <div className="flex flex-col w-full  font-semibold text-lg ">
               <label htmlFor="">Username</label>
               <TextField
                 size='small'
@@ -49,7 +73,7 @@ export default function index() {
               />
 
             </div>
-            <div className="flex flex-col w-full gap-2 font-semibold text-lg">
+            <div className="flex flex-col w-full  font-semibold text-lg">
               <label htmlFor="">Password</label>
               <TextField
                 size='small'
@@ -59,7 +83,8 @@ export default function index() {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
-            <Button variant='contained' className='w-full bg-blue-500'>Log in</Button>
+            <Button variant='contained' className='w-full bg-blue-500' type='submit'>Register</Button>
+          </form>
             <div className="create-account">
               Already have an account? <span className='hover:cursor-pointer hover:underline hover:text-blue-600' onClick={() => router.push('/')}>Login</span>
             </div>
