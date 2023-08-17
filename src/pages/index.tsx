@@ -9,15 +9,19 @@ import useUserData from '@/lib/hooks/useUserData'
 import LoadingDots from '@/components/shared/icons/loading-dots'
 import { useDispatch } from 'react-redux'
 import { UserStorePayload, setUser } from '@/store/user/userSlice'
+import { SubmitHandler, useForm } from 'react-hook-form'
+import axios from 'axios'
 
 const inter = Inter({ subsets: ['latin'] })
 
+type Login = {
+  email: string
+  password: string
+}
 
 export default function Home() {
-  const [showModal, setShowModal] = useState(false)
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
   const [buttonClicked, setButtonClicked] = useState(false)
+  const [loginClicked, setLoginClicked] = useState(false)
   const dispatch = useDispatch()
 
   const { data: session } = useSession()
@@ -31,6 +35,23 @@ export default function Home() {
 
   const { currentUser } = useUserData()
 
+
+  const { register, handleSubmit, formState: { errors } } = useForm<Login>()
+
+
+  // https://social-speak.fly.dev/login
+  const onSubmitLogin: SubmitHandler<Login> = useCallback(async (data) => {
+    setLoginClicked(true)
+    try {
+      const res = await axios.post('https://social-speak.fly.dev/login', data)
+      if (res.data) {
+        console.log(res.data)
+        router.push('/home')
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }, [])
 
   console.log(`currentUser`, currentUser)
   console.log(`currentUserData`, session)
@@ -59,30 +80,41 @@ export default function Home() {
               }
             </Button>
             <span>OR</span>
-            <div className="flex flex-col w-full gap-2 font-semibold text-lg ">
-              <label htmlFor="">Email</label>
-              <TextField
-                size='small'
-                variant="outlined"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
+            <form onSubmit={handleSubmit(onSubmitLogin)} className='w-full flex flex-col gap-5 items-center'>
+              <div className="flex flex-col w-full gap-2 font-semibold text-lg ">
+                <label htmlFor="">Email</label>
+                <TextField
+                  size='small'
+                  variant="outlined"
+                  error={errors.email?.type === 'required'}
+                  {...register('email', { required: true })}
+                />
 
-            </div>
-            <div className="flex flex-col w-full gap-2 font-semibold text-lg">
-              <label htmlFor="">Password</label>
-              <TextField
-                size='small'
-                variant="outlined"
-                type='password'
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
-            <Button variant='contained' className='w-full bg-blue-500'>Log in</Button>
-            <div className="create-account">
-              Don’t have an account? <span className='hover:cursor-pointer hover:underline hover:text-blue-600' onClick={() => router.push('/signup')}>Sign Up</span>
-            </div>
+              </div>
+              <div className="flex flex-col w-full gap-2 font-semibold text-lg">
+                <label htmlFor="">Password</label>
+                <TextField
+                  size='small'
+                  variant="outlined"
+                  type='password'
+                  error={errors.password?.type === 'required'}
+                  {...register('password', { required: true })}
+                />
+              </div>
+              <Button  type='submit' variant='contained' className={`w-full bg-blue-500 ${loginClicked ? 'cursor-not-allowed' : ''}`}>
+                {
+                  loginClicked ?
+                    <div className='w-8 h-fit my-auto '>
+                      <LoadingDots />
+                    </div>
+                    : <>LOG IN</>
+                }
+              </Button>
+              <div className="create-account">
+                Don’t have an account? <span className='hover:cursor-pointer hover:underline hover:text-blue-600' onClick={() => router.push('/signup')}>Sign Up</span>
+              </div>
+            </form>
+
           </div>
         </div>
 

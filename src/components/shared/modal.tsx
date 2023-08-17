@@ -18,21 +18,21 @@ export default function modal({
 }
 ) {
 
-    const desktopModalRef = useRef(null);
+    // const desktopModalRef = useRef(null);
 
-    const onKeyDown = useCallback(
-        (e: KeyboardEvent) => {
-            if (e.key === "Escape") {
-                setShowModal(false);
-            }
-        },
-        [setShowModal],
-    );
+    // const onKeyDown = useCallback(
+    //     (e: KeyboardEvent) => {
+    //         if (e.key === "Escape") {
+    //             setShowModal(false);
+    //         }
+    //     },
+    //     [setShowModal],
+    // );
 
-    useEffect(() => {
-        document.addEventListener("keydown", onKeyDown);
-        return () => document.removeEventListener("keydown", onKeyDown);
-    }, [onKeyDown]);
+    // useEffect(() => {
+    //     document.addEventListener("keydown", onKeyDown);
+    //     return () => document.removeEventListener("keydown", onKeyDown);
+    // }, [onKeyDown]);
 
     const { isMobile, isDesktop } = useWindowSize();
     // if (!showModal) return null
