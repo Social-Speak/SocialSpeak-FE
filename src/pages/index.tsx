@@ -33,6 +33,7 @@ export default function Home() {
     dispatch(setUser(sessionUser))
   }, [dispatch, session])
 
+  console.log("button clicked", buttonClicked)
   const { currentUser } = useUserData()
 
 
@@ -59,18 +60,18 @@ export default function Home() {
     <div className='flex flex-col w-full h-screen bg-gradient-to-br from-cyan-100 via-slate-50 to-teal-100'>
       <div className='absolute flex ml-4  h-fit items-center gap-1 z-20'>
         <Image src={'/chatifylogo.png'} width={40} height={40} alt={'logo'} />
-        <h1 className='font-semibold mt-1'>Chatify</h1>
+        <h1 className='font-semibold mt-1 text-xl'>Sociak Speak</h1>
       </div>
 
       <div className='grid grid-cols-1 md:grid-cols-2  items-center w-full h-full mx-auto md:gap-20 md:p-10'>
         <div className="flex w-full justify-end items-center z-20">
           <div className='flex flex-col w-full md:max-w-xl items-center min-h-[400px] h-fit py-10 rounded-t-[32px] bg-white border md:py-10 px-16 absolute bottom-0 md:relative  md:rounded-[32px] md:min-h-[400px] md:max-h-[700px] shadow-md gap-5'>
             <h2 className='text-xl md:text-2xl font-semibold'>Login to your account</h2>
-            <Button variant='outlined' className='flex items-center gap-4 w-full p-4 rounded-2xl' onClick={handleSignInGoogle}>
+            <Button variant='outlined' className='flex items-center gap-4 w-full p-4 rounded-2xl justify-center' onClick={handleSignInGoogle}>
               {
                 buttonClicked ?
-                  <div className='w-8 h-fit my-auto '>
-                    <LoadingDots />
+                  <div className='w-8 h-5 my-auto flex items-center justify-center'>
+                    <LoadingDots color="#000" />
                   </div>
                   :
                   <>
@@ -105,7 +106,7 @@ export default function Home() {
                 {
                   loginClicked ?
                     <div className='w-8 h-fit my-auto '>
-                      <LoadingDots />
+                      <LoadingDots color="#FFFFFF" />
                     </div>
                     : <>LOG IN</>
                 }
